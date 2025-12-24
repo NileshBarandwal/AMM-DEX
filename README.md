@@ -53,3 +53,59 @@ Before starting, ensure you have:
 
 ```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+
+Restart your terminal, then verify:
+
+```bash
+nvm --version
+
+### 2️⃣ Install and Use Node.js (LTS)
+
+```bash
+nvm install 22
+nvm use 22
+
+Verify
+```bash
+node -v
+npm -v
+
+### 📁 Project Setup
+### 3️⃣ Clone the Repository
+
+```bash
+mkdir amm-dex
+cd amm-dex
+
+### 4️⃣ Install Dependencies
+```bash
+npm install
+
+## 📦 Project Setup
+
+This project comes preconfigured with the following tools and libraries for Ethereum smart contract development and testing:
+
+### 🛠️ Included Dependencies
+
+- **Hardhat v3** – Development environment for compiling, deploying, and testing smart contracts
+- **Ethers.js** – Library for interacting with the Ethereum blockchain
+- **Mocha & Chai** – Testing frameworks for writing and running smart contract tests
+- **TypeScript** – Strongly typed JavaScript for safer and more scalable code
+- **OpenZeppelin Contracts** – Standard, audited smart contract libraries (used later in the project)
+
+These dependencies provide a solid foundation for building, testing, and deploying secure Ethereum smart contracts.
+
+## 🏗️ Hardhat Project Structure
+
+After completing the setup, the project directory is organized as follows:
+
+```text
+amm-dex/
+├── contracts/          # Solidity smart contracts
+├── test/               # Hardhat test files
+├── scripts/            # Deployment and interaction scripts
+├── ignition/           # Hardhat Ignition deployment configurations
+├── hardhat.config.ts   # Hardhat configuration file
+├── tsconfig.json       # TypeScript configuration
+├── package.json        # Project dependencies and scripts
+└── README.md           # Project documentation
