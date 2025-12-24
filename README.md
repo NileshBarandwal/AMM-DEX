@@ -53,22 +53,26 @@ Before starting, ensure you have:
 
 ```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+```
 
 Restart your terminal, then verify:
 
 ```bash
 nvm --version
+```
 
 ### 2️⃣ Install and Use Node.js (LTS)
 
 ```bash
 nvm install 22
 nvm use 22
+```
 
 Verify
 ```bash
 node -v
 npm -v
+```
 
 ### 📁 Project Setup
 ### 3️⃣ Clone the Repository
@@ -76,10 +80,12 @@ npm -v
 ```bash
 mkdir amm-dex
 cd amm-dex
+```
 
 ### 4️⃣ Install Dependencies
 ```bash
 npm install
+```
 
 ## 📦 Project Setup
 
@@ -109,3 +115,4 @@ amm-dex/
 ├── tsconfig.json       # TypeScript configuration
 ├── package.json        # Project dependencies and scripts
 └── README.md           # Project documentation
+```
