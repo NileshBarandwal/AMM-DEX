@@ -27,8 +27,8 @@ The frontend is responsible for:
 
 | Component | URL |
 |---------|-----|
+| Smart Contract (Sepolia) | https://sepolia.etherscan.io/address/0x7705bde5839b525862d1e3d911c21e12aa8b36c5 |
 | Frontend (Vercel) | https://amm-dex-orcin.vercel.app |
-| Network | Ethereum Sepolia Testnet |
 
 ---
 
