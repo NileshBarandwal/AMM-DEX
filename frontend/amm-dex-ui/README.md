@@ -71,24 +71,24 @@ AMM Smart Contracts
 
 amm-dex-ui/
 ├── src/
-│ ├── components/
-│ │ ├── Wallet.jsx # Wallet connect / address display
-│ │ ├── NetworkGuard.jsx # Wrong-network detection
-│ │ ├── Swap.jsx # Swap UI + AMM math
-│ │ ├── AddLiquidity.jsx # LP deposit with ratio enforcement
-│ │ ├── RemoveLiquidity.jsx # LP withdrawal
-│ │ ├── PoolInfo.jsx # Reserves + price display
-│ │ ├── UserBalances.jsx # Token balances
-│ │ ├── LPPosition.jsx # LP share calculation
-│ │ └── ILAnalytics.jsx # Impermanent loss calculator
-│ │
-│ ├── hooks/
-│ │ ├── useEthers.js # Wallet + provider management
-│ │ └── useContracts.js # Contract address/ABI mapping
-│ │
-│ ├── App.jsx # Main application layout
-│ ├── App.css # Global styles
-│ └── main.jsx
+│   ├── components/
+│   │   ├── Wallet.jsx           # Wallet connect / address display
+│   │   ├── NetworkGuard.jsx     # Wrong-network detection
+│   │   ├── Swap.jsx             # Swap UI + AMM math
+│   │   ├── AddLiquidity.jsx     # LP deposit with ratio enforcement
+│   │   ├── RemoveLiquidity.jsx  # LP withdrawal
+│   │   ├── PoolInfo.jsx         # Reserves + price display
+│   │   ├── UserBalances.jsx     # Token balances
+│   │   ├── LPPosition.jsx       # LP share calculation
+│   │   └── ILAnalytics.jsx      # Impermanent loss calculator
+│   │
+│   ├── hooks/
+│   │   ├── useEthers.js         # Wallet + provider management
+│   │   └── useContracts.js      # Contract address/ABI mapping
+│   │
+│   ├── App.jsx                  # Main application layout
+│   ├── App.css                  # Global styles
+│   └── main.jsx
 │
 ├── public/
 ├── package.json
