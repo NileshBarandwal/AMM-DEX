@@ -46,6 +46,7 @@ The frontend is responsible for:
 
 ## 4. High-Level Frontend Architecture
 
+```bash
 User
 ↓
 React UI
@@ -57,6 +58,7 @@ MetaMask
 Ethereum (Sepolia)
 ↓
 AMM Smart Contracts
+```
 
 
 ### Design Principles
@@ -68,7 +70,7 @@ AMM Smart Contracts
 ---
 
 ## 5. Application Structure
-
+```bash
 amm-dex-ui/
 ├── src/
 │   ├── components/
@@ -93,7 +95,7 @@ amm-dex-ui/
 ├── public/
 ├── package.json
 └── README.md
-
+```
 
 ---
 
