@@ -101,18 +101,28 @@ This project comes preconfigured with the following tools and libraries for Ethe
 
 These dependencies provide a solid foundation for building, testing, and deploying secure Ethereum smart contracts.
 
-## 🏗️ Hardhat Project Structure
+## 🏗️ Repository Structure
 
 After completing the setup, the project directory is organized as follows:
 
 ```text
 amm-dex/
-├── contracts/          # Solidity smart contracts
-├── test/               # Hardhat test files
-├── scripts/            # Deployment and interaction scripts
-├── ignition/           # Hardhat Ignition deployment configurations
-├── hardhat.config.ts   # Hardhat configuration file
-├── tsconfig.json       # TypeScript configuration
-├── package.json        # Project dependencies and scripts
-└── README.md           # Project documentation
+├── contracts/
+│   ├── Pool.sol        # Core AMM pool (x*y=k)
+│   ├── Router.sol      # Swap routing + safety checks
+│   ├── LPToken.sol     # Liquidity provider token
+│   └── TestToken.sol   # ERC20 test tokens
+│
+├── test/
+│   └── pool.test.js    # Full AMM test suite
+│
+├── scripts/
+│   └── deploy.js       # Local & Sepolia deployment
+│
+├── frontend/
+│   └── amm-dex-ui/     # React frontend
+│
+├── hardhat.config.js
+├── package.json
+└── README.md
 ```
