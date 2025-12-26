@@ -445,29 +445,249 @@ ERC20 tokens for testing (TKA, TKB).
 
 ---
 
-## 📊 Key Metrics & Formulas
+## 🧮 AMM Formulas Explained (With Examples)
 
-### **Constant Product Formula**
+This section provides detailed explanations of every formula used in the AMM, with numeric examples for interview preparation.
+
+---
+
+### **1. Constant Product Formula (Core AMM)**
+
+**Formula:**
 ```
 x · y = k
 ```
-Where `x` and `y` are token reserves, and `k` remains constant.
 
-### **Swap Calculation**
-```
-amountOut = (amountIn * 997 * reserveOut) / (reserveIn * 1000 + amountIn * 997)
-```
-Includes 0.3% fee (997/1000).
+**What it means:**
+- `x` = reserve of Token A
+- `y` = reserve of Token B  
+- `k` = constant invariant
 
-### **Price Impact**
+The product of reserves **must remain constant** after every trade (excluding fees).
+
+**Example:**
+
+Pool reserves:
+- Token A = 100
+- Token B = 100
+- k = 100 × 100 = 10,000
+
+If someone buys Token B:
+- Token A increases
+- Token B decreases
+- The product stays ≈ 10,000
+
+**Why it matters:** The invariant forces prices to move automatically based on supply and demand, eliminating the need for order books.
+
+---
+
+### **2. Swap Output Formula (With Fee)**
+
+**Formula:**
 ```
-priceImpact = ((initialPrice - finalPrice) / initialPrice) × 100
+amountOut = (amountIn × 997 × reserveOut) / (reserveIn × 1000 + amountIn × 997)
 ```
 
-### **Impermanent Loss**
+**Why 997/1000?**
+- 0.3% fee (Uniswap v2 standard)
+- User effectively trades **99.7%** of input
+- Fees stay in pool for LPs
+
+**Example:**
+
+Pool state:
+- reserveA = 100
+- reserveB = 100
+
+User swaps 10 Token A:
+
+Step 1: Fee-adjusted input
 ```
-IL = 2 × √(priceRatio) / (1 + priceRatio) - 1
+10 × 0.997 = 9.97
 ```
+
+Step 2: Calculate output
+```
+(9.97 × 100) / (100 + 9.97) = 9.06 Token B
+```
+
+**Why it matters:** Fees are applied before computing the invariant, ensuring LPs earn value without explicit reward distribution.
+
+---
+
+### **3. Spot Price (Before Trade)**
+
+**Formula:**
+```
+spotPrice = reserveOut / reserveIn
+```
+
+**Example:**
+```
+100 / 100 = 1
+```
+Meaning: 1 Token A ≈ 1 Token B (before trade)
+
+---
+
+### **4. Execution Price (Actual Trade Price)**
+
+**Formula:**
+```
+executionPrice = amountOut / amountIn
+```
+
+**Example:**
+```
+9.06 / 10 = 0.906
+```
+Meaning: You paid 1 Token A to receive only 0.906 Token B due to slippage + fees.
+
+---
+
+### **5. Price Impact**
+
+**Formula:**
+```
+priceImpact = ((spotPrice - executionPrice) / spotPrice) × 100
+```
+
+**Example:**
+```
+((1 - 0.906) / 1) × 100 = 9.4%
+```
+
+**Why it matters:** Price impact measures how much the trade moves the pool price and increases with trade size relative to liquidity.
+
+---
+
+### **6. Slippage Protection (Min Amount Out)**
+
+**Formula:**
+```
+minAmountOut = expectedOut × (1 - slippageTolerance)
+```
+
+**Example:**
+- Expected output = 9.06
+- Slippage tolerance = 1%
+```
+9.06 × 0.99 = 8.97
+```
+If actual output < 8.97 → **transaction reverts**
+
+**Why it matters:** Protects users from MEV, front-running, and sudden pool changes.
+
+---
+
+### **7. LP Token Minting (Initial Liquidity)**
+
+**Formula:**
+```
+LP_minted = √(amountA × amountB)
+```
+
+**Example:**
+
+User deposits:
+- 100 Token A
+- 100 Token B
+```
+√(100 × 100) = 100 LP tokens
+```
+
+**Why geometric mean?** It fairly represents proportional ownership without price bias.
+
+---
+
+### **8. LP Token Minting (Subsequent Liquidity)**
+
+**Formula:**
+```
+LP_minted = min(
+    (amountA × totalLP) / reserveA,
+    (amountB × totalLP) / reserveB
+)
+```
+
+**Example:**
+
+Pool state:
+- reserveA = 100, reserveB = 100
+- total LP = 100
+
+User adds 10 A + 10 B:
+```
+(10 × 100) / 100 = 10 LP tokens
+```
+
+**Why it matters:** The minimum ensures liquidity is added at the current price ratio.
+
+---
+
+### **9. Liquidity Removal**
+
+**Formula:**
+```
+amountA = (LP_burned / totalLP) × reserveA
+amountB = (LP_burned / totalLP) × reserveB
+```
+
+**Example:**
+
+Pool state:
+- reserveA = 110, reserveB = 90
+- total LP = 100
+
+User burns 10 LP:
+```
+amountA = (10 / 100) × 110 = 11
+amountB = (10 / 100) × 90 = 9
+```
+
+---
+
+### **10. Impermanent Loss (IL)**
+
+**Formula:**
+```
+IL = (2 × √(priceRatio)) / (1 + priceRatio) - 1
+```
+
+**Example:**
+
+Price doubles → priceRatio = 2
+```
+IL = (2 × √2) / (1 + 2) - 1 ≈ -5.7%
+```
+
+**Why it matters:** IL measures the opportunity cost of providing liquidity versus holding assets.
+
+---
+
+### **11. Fee Accumulation Effect**
+
+**Concept:**
+```
+k_after > k_before
+```
+Because fees stay in the pool.
+
+**Example:**
+After multiple swaps:
+- Reserves increase slightly
+- LPs withdraw more than they deposited
+
+---
+
+### **12. Deadline Check**
+
+**Implementation:**
+```solidity
+require(block.timestamp <= deadline, "Expired");
+```
+
+**Purpose:** Prevents stale trades, delayed execution, and sandwich attacks.
 
 ---
 
