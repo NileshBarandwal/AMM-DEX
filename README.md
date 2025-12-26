@@ -447,7 +447,7 @@ ERC20 tokens for testing (TKA, TKB).
 
 ## 🧮 AMM Formulas Explained (With Examples)
 
-This section provides detailed explanations of every formula used in the AMM, with numeric examples for interview preparation.
+This section provides detailed explanations of every formula used in the AMM, with numeric examples.
 
 ---
 
