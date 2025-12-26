@@ -749,6 +749,7 @@ Please ensure:
 
 **Nilesh Barandwal**  
 M.Tech Computer Science & Engineering  
+IIT Dharwad
 Focus: Blockchain, Smart Contracts, Secure Systems, DeFi
 
 ### **Connect**
