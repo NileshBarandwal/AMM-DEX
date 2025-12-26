@@ -5,6 +5,7 @@ A **fully functional Automated Market Maker (AMM) decentralized exchange** built
 > **🌐 Live Demo (Sepolia Testnet)**  
 > [https://amm-dex-orcin.vercel.app](https://amm-dex-orcin.vercel.app)
 
+> [Smart Contract (Sepolia)](https://sepolia.etherscan.io/address/0x7705bde5839b525862d1e3d911c21e12aa8b36c5)
 ---
 
 ## 🎯 Project Overview
