@@ -748,8 +748,7 @@ Please ensure:
 ## 🧠 Author
 
 **Nilesh Barandwal**  
-M.Tech Computer Science & Engineering  
-IIT Dharwad
+IIT Dh, M.Tech Computer Science & Engineering  
 Focus: Blockchain, Smart Contracts, Secure Systems, DeFi
 
 ### **Connect**
