@@ -212,7 +212,7 @@ npm -v    # Should show 10.x.x
 Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/amm-dex.git
+[git clone https://github.com/yourusername/amm-dex.git](https://github.com/NileshBarandwal/AMM-DEX.git)
 cd amm-dex
 ```
 
