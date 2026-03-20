@@ -2,6 +2,10 @@
 
 Centralized exchanges hold your tokens in custody and require active market makers to post and manage orders. When a market maker pulls liquidity, spreads widen and the book becomes unusable. A constant-product AMM eliminates both problems: liquidity is locked in a smart contract (no custodial risk), and price is determined by a formula rather than a human posting orders. Anyone can provide liquidity and earn fees proportional to their share of the pool. This is a ground-up implementation of that mechanism — Pool, Router, and LP token contracts written in Solidity, tested with Hardhat, and connected to a React frontend on Sepolia testnet.
 
+**Live demo (Sepolia testnet):** [https://amm-dex-orcin.vercel.app](https://amm-dex-orcin.vercel.app)
+
+**Smart contract on Sepolia:** [0x7705bde5839b525862d1e3d911c21e12aa8b36c5](https://sepolia.etherscan.io/address/0x7705bde5839b525862d1e3d911c21e12aa8b36c5)
+
 ---
 
 ## How it works
@@ -80,7 +84,7 @@ sequenceDiagram
     F->>R: swapExactTokensForTokens(pool, tokenIn, amountIn, minAmountOut, deadline)
     R->>P: transferFrom user → Router, approve Pool, call swap()
     P->>P: check deadline, check tokenIn valid
-    P->>P: compute amountOut = (reserveOut × amountInWithFee) / (reserveIn + amountInWithFee)
+    P->>P: compute amountOut = (reserveOut x amountInWithFee) / (reserveIn + amountInWithFee)
     P->>P: require(amountOut >= minAmountOut)
     P->>P: transfer tokenOut to Router
     P->>P: sync reserves to actual balances (fee accrual)
@@ -95,8 +99,8 @@ sequenceDiagram
 1. **Adds initial liquidity** — verifies `reserveA` and `reserveB` are set correctly after first deposit
 2. **Swaps tokenA for tokenB** — confirms user balance of tokenB increases after swap
 3. **Removes liquidity** — burns all LP tokens, verifies both reserves drain to 0
-4. **Reverts when slippage is exceeded** — passes an impossibly high `minAmountOut`, expects `"Slippage exceeded"` revert
-5. **Reverts when deadline has passed** — passes deadline `= 1` (Unix epoch), expects `"Expired"` revert
+4. **Reverts when slippage is exceeded** — passes an impossibly high `minAmountOut`, expects "Slippage exceeded" revert
+5. **Reverts when deadline has passed** — passes deadline = 1 (Unix epoch), expects "Expired" revert
 6. **Router swaps tokens correctly** — end-to-end test through the Router contract, confirms user receives output tokens
 7. **LPs earn fees over time** — LP deposits, user swaps (generating fee), LP withdraws and receives more tokenA than originally deposited
 
@@ -107,14 +111,7 @@ Built with React 18 + Vite + Ethers.js v6 + MetaMask. Lets users:
 - Approve and add liquidity to a pool
 - Swap between tokenA and tokenB with configurable slippage tolerance
 - View current pool reserves and LP token balance
-
----
-
-## Deployment
-
-**Sepolia testnet** — addresses printed by `scripts/deploy.js` on deployment. Add them to a `.env` file or the frontend config after running the deploy script.
-
-**Frontend** — deployed on Vercel. Live link in the repository description.
+- Estimate impermanent loss
 
 ---
 
@@ -137,7 +134,7 @@ Built with React 18 + Vite + Ethers.js v6 + MetaMask. Lets users:
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 22+ (required for Hardhat v3)
 - MetaMask browser extension
 
 ### Setup
@@ -151,7 +148,7 @@ npm install
 Create a `.env` file in the root:
 
 ```
-SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/<your-key>
+SEPOLIA_RPC_URL=https://eth-sepolia.g.alchemy.com/v2/<your-key>
 PRIVATE_KEY=<your-wallet-private-key>
 ```
 
@@ -170,14 +167,14 @@ npx hardhat test
 ### Deploy to local Hardhat network
 
 ```bash
-# Terminal 1 — start local node
+# Terminal 1 - start local node
 npx hardhat node
 
-# Terminal 2 — deploy
+# Terminal 2 - deploy
 npx hardhat run scripts/deploy.js --network localhost
 ```
 
-Copy the printed contract addresses. You'll need them to configure the frontend.
+Copy the printed contract addresses. You will need them to configure the frontend.
 
 ### Deploy to Sepolia
 
@@ -188,12 +185,12 @@ npx hardhat run scripts/deploy.js --network sepolia
 ### Start the frontend
 
 ```bash
-cd frontend
+cd frontend/amm-dex-ui
 npm install
 npm run dev
 ```
 
-Update the contract addresses in the frontend config to match your deployment output.
+Update the contract addresses in `src/constants/addresses.js` to match your deployment output.
 
 ---
 
@@ -202,11 +199,11 @@ Update the contract addresses in the frontend config to match your deployment ou
 | Test | What it verifies |
 |------|-----------------|
 | Initial liquidity | `reserveA` and `reserveB` match deposited amounts; LP tokens minted as geometric mean |
-| Swap A → B | User receives tokenB; pool reserves shift in accordance with constant-product formula |
+| Swap A to B | User receives tokenB; pool reserves shift in accordance with constant-product formula |
 | Remove liquidity | All LP tokens burned; both reserves return to 0; tokens returned to LP |
-| Slippage revert | `minAmountOut` higher than formula output causes revert with `"Slippage exceeded"` |
-| Deadline revert | Expired deadline causes revert with `"Expired"` before any state change |
-| Router swap | End-to-end path: user → Router → Pool → user; output token lands in correct wallet |
+| Slippage revert | `minAmountOut` higher than formula output causes revert with "Slippage exceeded" |
+| Deadline revert | Expired deadline causes revert with "Expired" before any state change |
+| Router swap | End-to-end path: user to Router to Pool to user; output token lands in correct wallet |
 | Fee accrual | LP withdraws more tokenA than deposited after swap activity in the pool |
 
 ---
@@ -217,7 +214,7 @@ This implements the core AMM loop for two tokens with a fixed fee. A production 
 
 - **MEV protection** — this contract is vulnerable to sandwich attacks. A searcher can front-run a large swap, let it move the price, then back-run to pocket the difference. Mitigations include commit-reveal schemes, private mempools, or time-weighted average price checks.
 - **Multi-hop routing** — swapping tokenA for tokenC when only A/B and B/C pools exist requires the Router to chain swaps. The current Router handles a single pool.
-- **Concentrated liquidity** — Uniswap v3 lets LPs specify a price range for their liquidity, dramatically improving capital efficiency. This implementation deposits liquidity across the entire price curve (0 to ∞).
+- **Concentrated liquidity** — Uniswap v3 lets LPs specify a price range for their liquidity, dramatically improving capital efficiency. This implementation deposits liquidity across the entire price curve (0 to infinity).
 - **Oracle price feeds** — a time-weighted average price (TWAP) oracle lets other contracts read a manipulation-resistant price from this pool. Not implemented.
 - **Factory contract** — a Factory deploys new Pool contracts on demand and maintains a registry of all pairs. Currently pools are deployed manually via the deploy script.
 - **Governance and fee tiers** — production AMMs allow governance to adjust fees per pool or redirect a portion of fees to a protocol treasury.
